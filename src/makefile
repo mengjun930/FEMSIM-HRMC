@@ -6,7 +6,7 @@ OBJ = $(addsuffix .o, $(basename $(SRC)))
 
 LIBS=
 
-FC = mpif90
+FC = ifort 
 
 .DEFAULT_GOAL := nothing
 
@@ -24,7 +24,7 @@ FCFLAGS += -g -debug all -check all -implicitnone -warn all -openmp -fpp -DDEBUG
 MAKECMDGOALS := $(filter-out debug,$(MAKECMDGOALS))
 $(info Making debug version of $(MAKECMDGOALS)...)
 else
-FCFLAGS += -O2 -openmp -fpp
+FCFLAGS += -O2 -fpp
 endif
 
 ifneq (,$(findstring femsim,$(MAKECMDGOALS)))

@@ -108,10 +108,12 @@ program hrmc
         stop 1
     endif
 
+#ifndef SERIAL
     if((myid .eq. 0) .and. (parent_comm .ne. mpi_comm_null)) then
         open(unit=stdout, file=trim("stdout"//trim(jobID))//".log", form="formatted")
         open(unit=stderr, file=trim("stderr"//trim(jobID))//".log", form="formatted")
     endif
+#endif
 
     call get_command_argument(2, c, length, istat)
     if (istat == 0) then
@@ -123,9 +125,11 @@ program hrmc
     param_filename = trim(param_filename)
 
     if(myid .eq. 0) write(stdout,*) "Successfully initialized MPI_COMM_WORLD"
+#ifndef SERIAL
     if(parent_comm .eq. mpi_comm_null) then
         write(stdout,'(A10, I2, A4, I2, A11, I2, A6, I2, A18, I2)') "I am core ", myid, " of ", numprocs, " with color", color, ", root", 0, ", and communicator", communicator
     endif
+#endif
 
     if(myid .eq. 0) then
         ! Set output filenames.
@@ -455,11 +459,13 @@ program hrmc
 #endif
 
     ! Free the sub-communicators and finalize
+#ifndef SERIAL
     if(parent_comm .ne. mpi_comm_null) then
         call mpi_comm_disconnect(parent_comm, mpierr)
         if(myid .eq. 0) write(stdout,*) "Disconnected from parent!"
     endif
     call mpi_finalize(mpierr)
+#endif
 
     if(myid .eq. 0) write(stdout,*) "Successfully finished FEMSIM"
 end program hrmc
