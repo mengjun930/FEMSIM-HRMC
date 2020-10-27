@@ -260,6 +260,33 @@ contains
     end subroutine init_pix
 
 
+    subroutine write_model(m, model_path)
+        implicit none
+        type(model), intent(in) :: m
+        character(len=1024) :: model_path
+        integer i
+        character(3), dimension(118) :: syms
+
+        syms = (/ "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na",  &
+        "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V",    &
+        "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br",&
+        "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", &
+        "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", &
+        "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu",&
+        "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", &
+        "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", &
+        "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh",&
+        "Hs", "Mt", "Ds", "Rg", "Cn", "Uut", "Fl", "Uup", "Lv", "Uus", "Uuo" /)
+
+        open(1, file = model_path, status = 'REPLACE')
+        write(1, *) m%natoms
+        write(1, *) m%lx, m%ly, m%lz
+        do i = 1, m%natoms
+            write(1, *) syms(m%znum%ind(i)), m%xx%ind(i), m%yy%ind(i), m%zz%ind(i)
+        enddo
+    end subroutine write_model
+
+
     subroutine fem(m, res, k, vk, scatfact_e, comm, istat, rot_begin, rot_end)
 #ifndef SERIAL
         use mpi
@@ -276,6 +303,7 @@ contains
         integer :: comm
         integer :: i, j
         integer begin_rot, end_rot
+        character(len=1024) :: rotate_geometry_filename
 
         if(present(rot_begin)) then
             begin_rot = rot_begin
@@ -304,6 +332,12 @@ contains
             call rotate_model(rot(i, 1), rot(i, 2), rot(i, 3), m, mrot(i), istat)
             call check_for_error(istat, 'Failed to rotate model')
             mrot(i)%id = i
+        enddo
+
+        do i=myid+1, nrot, numprocs
+            write(rotate_geometry_filename, "(A5,I0.3)") "hello", 10
+            write(rotate_geometry_filename, "(A6,I0.3,A4)") "rotate", i, ".xyz"
+            call write_model(mrot(i), rotate_geometry_filename)
         enddo
 
         allocate(old_index(nrot), old_pos(nrot), stat=istat)
