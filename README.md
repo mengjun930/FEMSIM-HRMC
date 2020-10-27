@@ -4,6 +4,17 @@ If you use FEMSIM or HRMC, please cite this [publication](http://www.sciencedire
 
 This publication can also be used for further documentation.
 
+## How to use fortran debugger in vscode
+
+- install extentions
+  - gimly81.fortran
+  - krvajalm.linter-gfortran
+  - hansec.fortran-ls
+  - ekibun.fortranbreaker
+- install fortran language server
+  - pip install fortran-language-server [ref link](https://github.com/hansec/fortran-language-server)
+- edit .vscode/launch.json and .vscode/task.json, use gdb to debug
+
 ## Input and Output Parameters and Files
 
 ###  Compiling

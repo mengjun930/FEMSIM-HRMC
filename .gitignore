@@ -7,3 +7,4 @@ model_update*.xyz
 acceptance_rate*.txt
 chi_squared*.txt
 vk_initial*.txt
+src/str2int__genmod.f90

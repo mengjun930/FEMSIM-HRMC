@@ -1,0 +1,16 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "make debug",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}; make clean -C src; make femsim serial debug -C src;",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+
+        }
+    ]
+}

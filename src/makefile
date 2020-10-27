@@ -53,6 +53,7 @@ clean:
 
 debug: ;
 nothing: ;
+serial: ;
 
 ${FEMSIM}: ${OBJ} hrmc.o
 	${FC} ${OBJ} ${FCFLAGS} -o ${FEMSIM}
