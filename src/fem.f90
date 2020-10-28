@@ -283,6 +283,7 @@ contains
         write(1, *) m%lx, m%ly, m%lz
         do i = 1, m%natoms
             write(1, *) syms(m%znum%ind(i)), m%xx%ind(i), m%yy%ind(i), m%zz%ind(i)
+        close(1)
         enddo
     end subroutine write_model
 
